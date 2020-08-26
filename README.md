@@ -15,7 +15,7 @@
 ## 使用方法
 0.下载最新release
 ### 使用源码
-1. 安装依赖：'pip install -r requirements.txt`
+1. 安装依赖：`pip install -r requirements.txt`
 2. 运行：`python U2TrackerUpdater.py`
 ### 使用执行程序
 1. 运行`U2TrackerUpdater.exe`
