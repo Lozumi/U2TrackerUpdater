@@ -1,3 +1,5 @@
 python-qbittorrent==0.4.2
 requests==2.23.0
 qbittorrent==0.1.6
+transmissionrpc==0.11
+deluge-client==1.9.0
