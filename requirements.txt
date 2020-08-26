@@ -1,0 +1,2 @@
+qbittorrent==0.1.6
+requests==2.23.0
