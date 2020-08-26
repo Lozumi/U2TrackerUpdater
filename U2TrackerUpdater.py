@@ -22,12 +22,11 @@ from qbittorrent import Client
 print("# U2TrackerUpdater\n# 批量更新任务Tracker地址中的秘钥\n# 原作者：U2@杯杯杯杯具(https://gist.github.com/tongyifan/83220b417cffdd23528860ee0c518d15)\n# 优化：U2@Loid(https://github.com/LoidVC/U2TrackerUpdater)")
 print("# 本工具仅限于个人更新Tracker中的秘钥用，禁止利用其进行带宽和运算资源占用、数据挖掘、规律遍历、商业使用或类似的活动。\n违规操作造成的警告、禁用相关账户，封锁IP、中止或终止API等后果自负责任。")
 # todo: edit me
-apikey = input("输入秘钥获取API地址（站内查看）：")
-cHost = input("输入客户端地址（IP:端口）")
+apikey = input("输入APIKEY（站内查看API地址中的apikey=后面的部分）：")
+cHost = input("输入客户端地址（http://IP:端口）：")
 cUser = input("输入客户端用户名：")
 cPass = input("输入客户端密码：")
-cConfig = '{"host": "'+cHost+'","username": "'+cUser+'","password": "'+cPass+'",}'
-qbittorrent_config = json.dumps(cConfig)
+qbittorrent_config = {"host":cHost,"username":cUser,"password":cPass}
 # 此行往下不用修改
 
 endpoint = "https://u2.dmhy.org/jsonrpc_torrentkey.php"
@@ -83,10 +82,6 @@ def main():
             _index[index] = torrent
         resp = requests.post(endpoint, params={"apikey": apikey}, json=request_data)
 
-        if resp.status_code == 403:
-            print("APIKEY无效，请检查（注意APIKEY不是passkey）")
-            exit()
-
         if resp.status_code == 503:
             while resp.status_code == 503:
                 wait_second = int(resp.headers["Retry-After"]) + 5
@@ -95,6 +90,10 @@ def main():
                 resp = requests.post(
                     endpoint, params={"apikey": apikey}, json=request_data
                 )
+
+        if resp.status_code == 403:
+            print("APIKEY无效，请检查（注意APIKEY不是passkey）")
+            exit()
 
         if resp.status_code != 200:
             print(f"意外的错误：{resp.status_code}")
