@@ -1,2 +1,2 @@
-qbittorrent==0.1.6
+python-qbittorrent==0.4.2
 requests==2.23.0
