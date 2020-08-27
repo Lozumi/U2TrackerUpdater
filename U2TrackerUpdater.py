@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*
 # U2TrackerUpdater
 # 批量更新任务Tracker地址中的秘钥
 # 原作者：
@@ -27,15 +28,15 @@ from deluge_client import DelugeRPCClient
 print("# U2TrackerUpdater\n# 批量更新任务Tracker地址中的秘钥\n# 原作者：U2@杯杯杯杯具(https://gist.github.com/tongyifan/83220b417cffdd23528860ee0c518d15)\n# Tr-U2@ITGR(https://gist.github.com/inertia42/f6120d118e47925095dbceb5e8e27272)\n# De-U2@種崎敦美(https://github.com/XSky123/dmhy_change_securekey_deluge)\n# 整合优化：U2@Loid(https://github.com/LoidVC/U2TrackerUpdater)")
 print('# 原作者备注\n# 0. 免责声明：程序仅在本地客户端qBittorrent v4.2.5/Transmission v2.94/Deluge v1.3.15上测试通过，运行结果与作者无关\n# 1. 已知bug：从第 48 个请求开始会连续失败 10 次，在管理组修复之前请手动重复执行至所有种子更新完毕，直到显示找到0个未被更新的种子为止')
 print("# 优化备注\n# 1.添加交互逻辑\n# 2.整合多客户端\n# 3.本工具仅限用于于个人更新Tracker中的秘钥，禁止利用其进行带宽和运算资源占用、数据挖掘、规律遍历、商业使用或类似的活动。违规操作造成的警告、禁用相关账户，封锁IP、中止或终止API等后果自负责任。")
-termDes = input('# 我已阅读并同意上述条款（Y/N）：')
+termDes = raw_input('# 我已阅读并同意上述条款（Y/N）：')
 if termDes != 'Y':
     exit()
 
 def c_qB():
-    apikey = input("输入APIKEY（站内查看API地址中的apikey=后面的部分）：")
-    cHost = input("输入客户端地址（http://IP:端口）：")
-    cUser = input("输入客户端用户名：")
-    cPass = input("输入客户端密码：")
+    apikey = raw_input("输入APIKEY（站内查看API地址中的apikey=后面的部分）：")
+    cHost = raw_input("输入客户端地址（http://IP:端口）：")
+    cUser = raw_input("输入客户端用户名：")
+    cPass = raw_input("输入客户端密码：")
     qbittorrent_config = {"host":cHost,"username":cUser,"password":cPass}
     # 此行往下不用修改
 
@@ -73,10 +74,10 @@ def c_qB():
         ]
 
         batch_size = 100
-        print(f"找到了{len(u2_torrent_info_hash)}个未被更新的种子～")
+        print("找到了"+str(len(u2_torrent_info_hash))+"个未被更新的种子～")
         updated_torrents = []
         for i in range(0, len(u2_torrent_info_hash), batch_size):
-            print(f"正在获取第{i}到第{i+len(u2_torrent_info_hash[i:i+batch_size])}个种子的新secret key")
+            print("正在获取第"+str(i)+"到第"+str(i+len(u2_torrent_info_hash[i:i+batch_size]))+"个种子的新secret key")
 
             request_data = []
             _index = {}
@@ -95,7 +96,7 @@ def c_qB():
             if resp.status_code == 503:
                 while resp.status_code == 503:
                     wait_second = int(resp.headers["Retry-After"]) + 5
-                    print(f"速度过快，将在{wait_second}秒后重试")
+                    print("速度过快，将在"+str(wait_second)+"秒后重试")
                     time.sleep(wait_second)
                     resp = requests.post(
                         endpoint, params={"apikey": apikey}, json=request_data
@@ -106,7 +107,7 @@ def c_qB():
                 exit()
 
             if resp.status_code != 200:
-                print(f"意外的错误：{resp.status_code}")
+                print("意外的错误："+str(resp.status_code)+"")
 
             response_data = resp.json()
             for item in response_data:
@@ -135,11 +136,11 @@ def c_qB():
     return 0
 
 def c_Tr():
-    apikey = input("输入APIKEY（站内查看API地址中的apikey=后面的部分）：")
-    cHost = input("输入客户端IP（http://IP）：")
-    cPort = input("输入客户端端口（通常为9091）：")
-    cUser = input("输入客户端用户名：")
-    cPass = input("输入客户端密码：")
+    apikey = raw_input("输入APIKEY（站内查看API地址中的apikey=后面的部分）：")
+    cHost = raw_input("输入客户端IP（http://IP）：")
+    cPort = raw_input("输入客户端端口（通常为9091）：")
+    cUser = raw_input("输入客户端用户名：")
+    cPass = raw_input("输入客户端密码：")
     qbittorrent_config = {"host":cHost,"username":cUser,"password":cPass}
     transmission_config = {"host": cHost,"port": cPort,"username": cUser,"password": cPass}
     # 此行往下不用修改
@@ -175,10 +176,10 @@ def c_Tr():
         ]
 
         batch_size = 100
-        print(f"找到了{len(u2_torrent_info_hash)}个未被更新的种子～")
+        print("找到了"+str(len(u2_torrent_info_hash))+"个未被更新的种子～")
         updated_torrents = []
         for i in range(0, len(u2_torrent_info_hash), batch_size):
-            print(f"正在获取第{i}到第{i+len(u2_torrent_info_hash[i:i+batch_size])}个种子的新secret key")
+            print("正在获取第"+str(i)+"到第"+str(i+len(u2_torrent_info_hash[i:i+batch_size]))+"个种子的新secret key")
 
             request_data = []
             _index = {}
@@ -201,14 +202,14 @@ def c_Tr():
             if resp.status_code == 503:
                 while resp.status_code == 503:
                     wait_second = int(resp.headers["Retry-After"]) + 5
-                    print(f"速度过快，将在{wait_second}秒后重试")
+                    print("速度过快，将在"+str(wait_second)+"秒后重试")
                     time.sleep(wait_second)
                     resp = requests.post(
                         endpoint, params={"apikey": apikey}, json=request_data
                     )
 
             if resp.status_code != 200:
-                print(f"意外的错误：{resp.status_code}")
+                print("意外的错误："+str(resp.status_code)+"")
 
             response_data = resp.json()
             for item in response_data:
@@ -228,12 +229,12 @@ def c_Tr():
     return 0
 
 def c_De():
-    __APIURL__ = input("输入API地址（站内查看）：")
-    __DE_URL__ = input("输入客户端IP（http://IP）：")
-    __DE_PORT__ = input("输入客户端后端端口（非WebUI端口）：")
+    __APIURL__ = raw_input("输入API地址（站内查看）：")
+    __DE_URL__ = raw_input("输入客户端IP（http://IP）：")
+    __DE_PORT__ = raw_input("输入客户端后端端口（非WebUI端口）：")
     __DE_PORT__ = int(__DE_PORT__)
-    __DE_USER__ = input("输入客户端用户名：")
-    __DE_PW__ = input("输入客户端密码：")
+    __DE_USER__ = raw_input("输入客户端用户名：")
+    __DE_PW__ = raw_input("输入客户端密码：")
 
     count = 0
 
@@ -317,7 +318,7 @@ def c_De():
     return 0
 
 # 客户端类型
-clientType = input('当前客户端类型（1:qBittorrent,2:Transmission,3:Deluge）:')
+clientType = raw_input('当前客户端类型（1:qBittorrent,2:Transmission,3:Deluge）:')
 if clientType == '1':
     c_qB()
 elif clientType == '2':
@@ -327,4 +328,4 @@ elif clientType == '3':
 else:
     exit()
 
-input('感谢使用，祝您生活愉快。如果对您有帮助，欢迎star支持。（按任意键退出）')
+raw_input('感谢使用，祝您生活愉快。如果对您有帮助，欢迎star支持。（按任意键退出）')
