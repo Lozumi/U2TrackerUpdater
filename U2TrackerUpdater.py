@@ -231,6 +231,7 @@ def c_De():
     __APIURL__ = input("输入API地址（站内查看）：")
     __DE_URL__ = input("输入客户端IP（http://IP）：")
     __DE_PORT__ = input("输入客户端后端端口（非WebUI端口）：")
+    __DE_PORT__ = int(__DE_PORT__)
     __DE_USER__ = input("输入客户端用户名：")
     __DE_PW__ = input("输入客户端密码：")
 
