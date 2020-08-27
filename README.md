@@ -1,9 +1,9 @@
 # U2TrackerUpdater
 批量更新任务Tracker地址中的秘钥，支持qBittorrent,Transmission,Deluge三大客户端。
 ## 原作者：
-qB-U2@杯杯杯杯具(https://gist.github.com/tongyifan/83220b417cffdd23528860ee0c518d15)
-Tr-U2@ITGR(https://gist.github.com/inertia42/f6120d118e47925095dbceb5e8e27272)
-De-U2@種崎敦美(https://github.com/XSky123/dmhy_change_securekey_deluge)
+qB-U2@杯杯杯杯具(https://gist.github.com/tongyifan/83220b417cffdd23528860ee0c518d15)  
+Tr-U2@ITGR(https://gist.github.com/inertia42/f6120d118e47925095dbceb5e8e27272)  
+De-U2@種崎敦美(https://github.com/XSky123/dmhy_change_securekey_deluge)  
 ### 整合优化：
 U2@Loid(https://github.com/LoidVC/U2TrackerUpdater)
 
@@ -30,3 +30,4 @@ U2@Loid(https://github.com/LoidVC/U2TrackerUpdater)
 1.1(20200826) 修复参数输入，优化提示（感谢@vincent-163）
 1.2(20200826) 修正依赖项，测试正常
 1.3(20200827) 整合qB,Tr,De
+1.4(20200827) 修正Deluge端口数据类型
