@@ -1,11 +1,13 @@
-# U2TrackerUpdater
+# -*- coding: utf-8 -*
+# U2TrackerUpdater-1.5
 # 批量更新任务Tracker地址中的秘钥
+# 依赖：Python3.8(requests,qbittorrent,python-qbittorrent,transmissionrpc,deluge-client)
 # 原作者：
 # qB-U2@杯杯杯杯具(https://gist.github.com/tongyifan/83220b417cffdd23528860ee0c518d15)
 # Tr-U2@ITGR(https://gist.github.com/inertia42/f6120d118e47925095dbceb5e8e27272)
 # De-U2@種崎敦美(https://github.com/XSky123/dmhy_change_securekey_deluge)
 # 整合优化：U2@Loid(https://github.com/LoidVC/U2TrackerUpdater)
-
+# 感谢帮助：U2@vincent-163(PR#1),U2@x琳x(PR#3),感谢U2@Noira(论坛#139477)
 # 原作者备注
 # 0. 免责声明：程序仅在本地客户端qBittorrent v4.2.5/Transmission v2.94/Deluge v1.3.15上测试通过，运行结果与作者无关
 # 1. 已知bug：从第 48 个请求开始会连续失败 10 次，在管理组修复之前请手动重复执行至所有种子更新完毕，直到显示找到0个未被更新的种子为止
@@ -47,18 +49,34 @@ def c_qB():
     qb.login(qbittorrent_config["username"], qbittorrent_config["password"])
 
 
+    # def get_u2_torrents_hash():
+    #     torrents = qb.torrents()
+
+    #     u2_torrent_info_hash = []
+    #     for torrent in torrents:
+    #         if any([tracker in torrent.get("tracker", "") for tracker in u2_tracker]):
+    #             u2_torrent_info_hash.append(
+    #                 {"hash": torrent.get("hash"), "tracker": torrent.get("tracker")}
+    #             )
+
+    #     return u2_torrent_info_hash
+
+    #感谢U2@Noira
     def get_u2_torrents_hash():
         torrents = qb.torrents()
 
         u2_torrent_info_hash = []
         for torrent in torrents:
-            if any([tracker in torrent.get("tracker", "") for tracker in u2_tracker]):
-                u2_torrent_info_hash.append(
-                    {"hash": torrent.get("hash"), "tracker": torrent.get("tracker")}
-                )
+            hash = torrent["hash"]
+            trackers = qb.get_torrent_trackers(hash)
+
+            for tker in trackers:
+                if any([tracker in tker["url"] for tracker in u2_tracker]):
+                    u2_torrent_info_hash.append(
+                        {"hash": hash, "tracker": tker["url"] }
+                    )
 
         return u2_torrent_info_hash
-
 
     def main():
         u2_torrent_info_hash = get_u2_torrents_hash()
