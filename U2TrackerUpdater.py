@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*
-# U2TrackerUpdater
+# U2TrackerUpdater-1.6
 # 批量更新任务Tracker地址中的秘钥
+# 依赖：Python3.8(requests,qbittorrent,python-qbittorrent,transmissionrpc,deluge-client)
 # 原作者：
 # qB-U2@杯杯杯杯具(https://gist.github.com/tongyifan/83220b417cffdd23528860ee0c518d15)
 # Tr-U2@ITGR(https://gist.github.com/inertia42/f6120d118e47925095dbceb5e8e27272)
 # De-U2@種崎敦美(https://github.com/XSky123/dmhy_change_securekey_deluge)
 # 整合优化：U2@Loid(https://github.com/LoidVC/U2TrackerUpdater)
-
+# 感谢帮助：U2@vincent-163(PR#1),U2@x琳x(PR#3),U2@Noira(论坛#139477),U2@Rhilip(PR#4),U2@soleil(PR#5),Github@ThunderMonkey(PR#6)
 # 原作者备注
 # 0. 免责声明：程序仅在本地客户端qBittorrent v4.2.5/Transmission v2.94/Deluge v1.3.15上测试通过，运行结果与作者无关
 # 1. 已知bug：从第 48 个请求开始会连续失败 10 次，在管理组修复之前请手动重复执行至所有种子更新完毕，直到显示找到0个未被更新的种子为止
@@ -15,6 +16,7 @@
 # 1.添加交互逻辑
 # 2.整合多客户端
 # 3.本工具仅限用于于个人更新Tracker中的秘钥，禁止利用其进行带宽和运算资源占用、数据挖掘、规律遍历、商业使用或类似的活动。违规操作造成的警告、禁用相关账户，封锁IP、中止或终止API等后果自负责任。
+# 4.执行脚本的主机和运行客户端的主机在同一局域网即可，客户端地址写运行客户端的主机的地址
 
 import json
 import os
@@ -27,13 +29,14 @@ from qbittorrent import Client as QbittorrentClient
 
 # 声明
 notes = """
-# U2TrackerUpdater-1.5
+# U2TrackerUpdater-1.6
 # 批量更新任务Tracker地址中的秘钥
+# 依赖：Python3.8(requests,qbittorrent,python-qbittorrent,transmissionrpc,deluge-client)
 # 原作者：U2@杯杯杯杯具(https://gist.github.com/tongyifan/83220b417cffdd23528860ee0c518d15)
 # Tr-U2@ITGR(https://gist.github.com/inertia42/f6120d118e47925095dbceb5e8e27272)
 # De-U2@種崎敦美(https://github.com/XSky123/dmhy_change_securekey_deluge)
 # 整合优化：U2@Loid(https://github.com/LoidVC/U2TrackerUpdater)
-# 感谢帮助：U2@vincent-163(PR#1),U2@x琳x(PR#3),U2@Noira(论坛#139477)
+# 感谢帮助：U2@vincent-163(PR#1),U2@x琳x(PR#3),U2@Noira(论坛#139477),U2@Rhilip(PR#4),U2@soleil(PR#5),Github@ThunderMonkey(PR#6)
 
 # 原作者备注
 # 0. 免责声明：程序仅在本地客户端qBittorrent v4.2.5/Transmission v2.94/Deluge v1.3.15上测试通过，运行结果与作者无关
@@ -43,6 +46,7 @@ notes = """
 # 1.添加交互逻辑
 # 2.整合多客户端
 # 3.本工具仅限用于于个人更新Tracker中的秘钥，禁止利用其进行带宽和运算资源占用、数据挖掘、规律遍历、商业使用或类似的活动。违规操作造成的警告、禁用相关账户，封锁IP、中止或终止API等后果自负责任。
+# 4.执行脚本的主机和运行客户端的主机在同一局域网即可，客户端地址写运行客户端的主机的地址
 """
 
 
@@ -202,7 +206,7 @@ class Transmission(BtClient):
 
     def __init__(self):
         super().__init__()
-        self.host = input("输入客户端IP（http://IP）：")
+        self.host = input("输入客户端IP：")
         self.port = input("输入客户端端口（通常为9091）：")
         self.user = input("输入客户端用户名：")
         self.password = input("输入客户端密码：")
