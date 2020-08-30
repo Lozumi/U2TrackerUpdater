@@ -11,7 +11,7 @@ U2@vincent-163(PR#1),U2@x琳x(PR#3),U2@Noira(论坛#139477),U2@Rhilip(PR#4),U2@s
 
 ## 原作者备注
 0. 免责声明：程序仅在本地客户端qBittorrent v4.2.5/Transmission v2.94/Deluge v1.3.15上测试通过，运行结果与作者无关  
-1. 已知bug：从第 48 个请求开始会连续失败 10 次，在管理组修复之前请手动重复执行至所有种子更新完毕，直到显示找到0个未被更新的种子为止  
+1. 已知bug：从第 48 个请求开始会连续失败 10 次，在管理组修复之前请手动重复执行至所有种子更新完毕，直到显示找到0个未被更新的种子为止（已修复）  
 ## 优化备注
 1. 添加交互逻辑  
 2. 整合多客户端  
@@ -28,7 +28,7 @@ U2@vincent-163(PR#1),U2@x琳x(PR#3),U2@Noira(论坛#139477),U2@Rhilip(PR#4),U2@s
 1. 运行U2TrackerUpdater.exe
 
 ## 示范操作
-见Wiki（https://github.com/LoidVC/U2TrackerUpdater/wiki/Guide）。
+见Wiki https://github.com/LoidVC/U2TrackerUpdater/wiki/Guide
 ## 更新日志：
 ### 1.0(20200826)
 1.初始版本，优化适配qB客户端  
