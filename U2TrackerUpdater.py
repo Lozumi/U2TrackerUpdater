@@ -22,7 +22,7 @@ import os
 import time
 import requests
 from qbittorrent import Client
-import transmissionrpc
+import transmission_rpc
 from deluge_client import DelugeRPCClient
 
 # 声明
@@ -166,7 +166,7 @@ def c_Tr():
     u2_tracker = ["daydream.dmhy.best", "tracker.dmhy.org"]
     to_tracker = "https://daydream.dmhy.best/announce?secure={}"
 
-    tc = transmissionrpc.Client(transmission_config['host'], port=transmission_config['port'], user=transmission_config['username'], password=transmission_config['password'])
+    tc = transmission_rpc.Client(host=transmission_config['host'], port=transmission_config['port'], username=transmission_config['username'], password=transmission_config['password'])
 
     def get_u2_torrents_hash():
         torrents = list(filter(lambda x: 'dmhy' in x.trackers[0]['announce'], tc.get_torrents()))
