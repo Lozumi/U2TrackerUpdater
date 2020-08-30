@@ -66,7 +66,10 @@ class BtClient(object):
         # 加载缓存
         if os.path.exists(self.cache_file):
             with open(self.cache_file, "r") as fp:
-                self.cached_hashes = json.load(fp)
+                try:
+                    self.cached_hashes = json.load(fp)
+                except Exception:
+                    pass
 
     def saveCachedTorrentHashes(self):
         with open(self.cache_file, "w") as fp:
@@ -209,7 +212,7 @@ class Transmission(BtClient):
         self.tc = tc
 
     def getAllTorrentHashes(self) -> list:
-        torrents = list(filter(lambda x: 'dmhy' in x.trackers[0]['announce'], self.tc.get_torrents()))
+        torrents = list(filter(lambda x: x.trackers and 'dmhy' in x.trackers[0]['announce'], self.tc.get_torrents()))
 
         u2_torrent_info_hash = []
         for torrent in torrents:
