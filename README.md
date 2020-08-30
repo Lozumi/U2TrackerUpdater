@@ -26,6 +26,8 @@ U2@vincent-163(PR#1),U2@x琳x(PR#3),U2@Noira(论坛#139477)
 ### 使用执行程序
 1. 运行U2TrackerUpdater.exe
 
+## 示范操作
+见Wiki（https://github.com/LoidVC/U2TrackerUpdater/wiki/Guide）。
 ## 更新日志：
 ### 1.0(20200826)
 1.初始版本，优化适配qB客户端  
