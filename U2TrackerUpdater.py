@@ -169,7 +169,7 @@ def c_Tr():
     tc = transmissionrpc.Client(transmission_config['host'], port=transmission_config['port'], user=transmission_config['username'], password=transmission_config['password'])
 
     def get_u2_torrents_hash():
-        torrents = list(filter(lambda x: x.trackers and 'dmhy' in x.trackers[0]['announce'], tc.get_torrents()))
+        torrents = list(filter(lambda x: 'dmhy' in x.trackers[0]['announce'], tc.get_torrents()))
 
         u2_torrent_info_hash = []
         for torrent in torrents:
