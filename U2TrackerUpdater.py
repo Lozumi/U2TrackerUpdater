@@ -7,7 +7,7 @@
 # Tr-U2@ITGR(https://gist.github.com/inertia42/f6120d118e47925095dbceb5e8e27272)
 # De-U2@種崎敦美(https://github.com/XSky123/dmhy_change_securekey_deluge)
 # 整合优化：U2@Loid(https://github.com/LoidVC/U2TrackerUpdater)
-# 感谢帮助：U2@vincent-163(PR#1),U2@x琳x(PR#3),U2@Noira(论坛#139477),U2@Rhilip(PR#4),U2@soleil(PR#5),Github@ThunderMonkey(PR#6)
+# 感谢帮助：U2@vincent-163(PR#1),U2@x琳x(PR#3),U2@Noira(论坛#139477),U2@Rhilip(PR#4),U2@soleil(PR#5),Github@ThunderMikey(PR#6)
 # 原作者备注
 # 0. 免责声明：程序仅在本地客户端qBittorrent v4.2.5/Transmission v2.94/Deluge v1.3.15上测试通过，运行结果与作者无关
 # 1. 已知bug：从第 48 个请求开始会连续失败 10 次，在管理组修复之前请手动重复执行至所有种子更新完毕，直到显示找到0个未被更新的种子为止（已修复）
@@ -36,7 +36,7 @@ notes = """
 # Tr-U2@ITGR(https://gist.github.com/inertia42/f6120d118e47925095dbceb5e8e27272)
 # De-U2@種崎敦美(https://github.com/XSky123/dmhy_change_securekey_deluge)
 # 整合优化：U2@Loid(https://github.com/LoidVC/U2TrackerUpdater)
-# 感谢帮助：U2@vincent-163(PR#1),U2@x琳x(PR#3),U2@Noira(论坛#139477),U2@Rhilip(PR#4),U2@soleil(PR#5),Github@ThunderMonkey(PR#6)
+# 感谢帮助：U2@vincent-163(PR#1),U2@x琳x(PR#3),U2@Noira(论坛#139477),U2@Rhilip(PR#4),U2@soleil(PR#5),Github@ThunderMikey(PR#6)
 
 # 原作者备注
 # 0. 免责声明：程序仅在本地客户端qBittorrent v4.2.5/Transmission v2.94/Deluge v1.3.15上测试通过，运行结果与作者无关
