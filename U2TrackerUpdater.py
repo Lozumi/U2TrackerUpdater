@@ -21,7 +21,7 @@ import os
 import time
 
 import requests
-import transmissionrpc
+import transmission_rpc
 from deluge_client import DelugeRPCClient
 from qbittorrent import Client as QbittorrentClient
 
@@ -208,7 +208,7 @@ class Transmission(BtClient):
         self.password = input("输入客户端密码：")
 
         print("开始连接 Transmission 客户端...")
-        tc = transmissionrpc.Client(self.host, port=self.port, user=self.user, password=self.password)
+        tc = transmission_rpc.Client(self.host, port=self.port, username=self.user, password=self.password)
         self.tc = tc
 
     def getAllTorrentHashes(self) -> list:
