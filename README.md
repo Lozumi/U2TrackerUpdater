@@ -30,19 +30,19 @@ U2@vincent-163(PR#1),U2@x琳x(PR#3),U2@Noira(论坛#139477)
 ### 1.0(20200826)
 1.初始版本，优化适配qB客户端  
 ### 1.1(20200826)
-1.修复参数传入
+1.修复参数传入  
 2.优化提示（感谢U2@vincent-163 PR#1）  
 ### 1.2(20200826)
 1.添加依赖库 qbittorrent
 ### 1.3(20200827)【重大更新】
-1.整合qB,Tr,De客户端
-2.优化交互逻辑
+1.整合qB,Tr,De客户端  
+2.优化交互逻辑  
 ### 1.4(20200827)
 1.修正Deluge端口数据类型 
 ### 1.5(20200829)
-1.兼容非中文系统（感谢U2@x琳x PR#3）
-2.重写qB获取种子hash值的逻辑（感谢U2@Noira 论坛#139477）
+1.兼容非中文系统（感谢U2@x琳x PR#3）  
+2.重写qB获取种子hash值的逻辑（感谢U2@Noira 论坛#139477）  
 ### 1.6(20200831)【重大更新】
-1.代码重构，合并重复函数（感谢U2@Rhilip PR#4）
-2.修复Transmission客户端因无 tracker 属性导致的失败（参考论坛#139514）（感谢U2@soleil PR#5）
-3.更新Transmission库文件（感谢Github@ThunderMonkey PR#6）
+1.代码重构，合并重复函数（感谢U2@Rhilip PR#4）  
+2.修复Transmission客户端因无 tracker 属性导致的失败（参考论坛#139514）（感谢U2@soleil PR#5）  
+3.更新Transmission库文件（感谢Github@ThunderMonkey PR#6）  
