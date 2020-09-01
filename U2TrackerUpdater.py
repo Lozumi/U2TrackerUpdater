@@ -307,6 +307,46 @@ class DelugeWebApi(BtClient):
         }]])
 
 
+class RuTorrent(BtClient):
+    sess = None
+
+    def __init__(self):
+        super().__init__()
+        self.host = input("输入客户端地址（http://IP:端口）：")
+        self.user = input("输入客户端用户名：")
+        self.password = input("输入客户端密码：")
+
+        try:
+            ping = self.webRequest('php/getsettings.php')
+            ping.json()
+        except Exception:
+            print('检查ruTorrent连接性失败，请确认客户端地址、用户名、密码是否正确')
+            exit()
+
+    def webRequest(self, path, data=None):
+        return requests.post('{}/{}'.format(self.host, path),
+                             data=data,
+                             auth=(self.user, self.password))
+
+    def getAllTorrentHashes(self) -> list:
+        res = self.webRequest('/plugins/httprpc/action.php', {'mode': 'trkall'})
+        torrent_list = res.json()
+
+        return [{"hash": hash_} for (hash_, details) in torrent_list.items() if
+                any([tracker in torrent_list[hash_][0][0] for tracker in u2_tracker])]
+
+    def changeTorrentTracker(self, info, item):
+        self.webRequest('/plugins/edit/action.php', {
+            'comment': '',
+            'set_comment': 1,
+            'set_trackers': 1,
+            'set_private': 0,
+            'private': 1,
+            'tracker': to_tracker.format(item["result"]),
+            'hash': info['hash']
+        })
+
+
 if __name__ == '__main__':
     # 声明
     print(notes)
@@ -316,7 +356,7 @@ if __name__ == '__main__':
 
     # 客户端类型
     client = None
-    clientType = input('请输入客户端类型：\n1:qBittorrent, 2:Transmission, 3:Deluge (RPC API), 4:Deluge (Web API)：')
+    clientType = input('请输入客户端类型：\n1:qBittorrent, 2:Transmission, 3:Deluge (RPC API), 4:Deluge (Web API), 5:ruTorrent ：')
     if clientType == '1':
         client = QBittorrent()
     elif clientType == '2':
@@ -325,6 +365,8 @@ if __name__ == '__main__':
         client = DelugeRPC()
     elif clientType == '4':
         client = DelugeWebApi()
+    elif clientType == '5':
+        client = RuTorrent()
     else:
         exit()
 
