@@ -49,7 +49,6 @@ notes = """
 # 4.执行脚本的主机和运行客户端的主机在同一局域网即可，客户端地址写运行客户端的主机的地址
 """
 
-
 # 和U2的jsonrpc交互部分
 
 endpoint = "https://u2.dmhy.org/jsonrpc_torrentkey.php"
@@ -162,13 +161,13 @@ class BtClient(object):
 class QBittorrent(BtClient):
     def __init__(self):
         super().__init__()
-        self.host = input("输入客户端地址（http://IP:端口）：")
-        self.user = input("输入客户端用户名：")
-        self.password = input("输入客户端密码：")
+        host = input("输入客户端地址（http://IP:端口）：")
+        user = input("输入客户端用户名：")
+        password = input("输入客户端密码：")
 
-        qb = QbittorrentClient(self.host)
+        qb = QbittorrentClient(host)
         print("开始连接 Qbittorrent 客户端...")
-        qb.login(self.user, self.password)
+        qb.login(user, password)
         self.qb = qb
 
     def getAllTorrentHashes(self) -> list:
@@ -206,14 +205,13 @@ class Transmission(BtClient):
 
     def __init__(self):
         super().__init__()
-        self.host = input("输入客户端IP：")
-        self.port = input("输入客户端端口（通常为9091）：")
-        self.user = input("输入客户端用户名：")
-        self.password = input("输入客户端密码：")
+        host = input("输入客户端IP：")
+        port = input("输入客户端端口（通常为9091）：")
+        user = input("输入客户端用户名：")
+        password = input("输入客户端密码：")
 
         print("开始连接 Transmission 客户端...")
-        tc = transmission_rpc.Client(host=self.host, port=self.port, username=self.user, password=self.password)
-        self.tc = tc
+        self.tc = transmission_rpc.Client(host=host, port=int(port), username=user, password=password)
 
     def getAllTorrentHashes(self) -> list:
         torrents = list(filter(lambda x: x.trackers and 'dmhy' in x.trackers[0]['announce'], self.tc.get_torrents()))
@@ -230,10 +228,10 @@ class Transmission(BtClient):
         return self.tc.change_torrent(info["id"], trackerReplace=(0, to_tracker.format(item["result"])))
 
 
-class Deluge(BtClient):
+class DelugeRPC(BtClient):
     def __init__(self):
         super().__init__()
-        __DE_URL__ = input("输入客户端IP（http://IP）：")
+        __DE_URL__ = input("输入客户端IP：")
         __DE_PORT__ = int(input("输入客户端后端端口（非WebUI端口）："))
         __DE_USER__ = input("输入客户端用户名：")
         __DE_PW__ = input("输入客户端密码：")
@@ -245,13 +243,108 @@ class Deluge(BtClient):
     def getAllTorrentHashes(self) -> list:
         print("Fetching DMHY torrents from Deluge...")
         torrent_list = self.client.core.get_torrents_status({}, ['trackers'])
-        return [{"hash": str(hash_)[2:-1], "raw_hash": hash_} for hash_ in torrent_list if
-                "dmhy" in str(torrent_list[hash_][b'trackers'][0][b'url'])]
+        return [
+            {"hash": str(hash_)[2:-1], "raw_hash": hash_}
+            for hash_ in torrent_list
+            if any([tracker in str(torrent_list[hash_][b'trackers'][0][b'url']) for tracker in u2_tracker])
+        ]
 
     def changeTorrentTracker(self, info, item):
         self.client.core.set_torrent_trackers(info["raw_hash"], [
             {'url': to_tracker.format(item["result"]), 'tier': 0}
         ])
+
+
+class DelugeWebApi(BtClient):
+    id_ = 0
+
+    sess = None
+
+    def __init__(self):
+        print("本方法是以WEB API的形式连接Deluge客户端，如果你选择想以RPC API的形式连接。请退出重新选择 3: Deluge")
+        super().__init__()
+
+        self.host = input("输入客户端地址（http://IP:端口）：")
+        password = input("输入客户端密码：")
+
+        print("开始连接 Deluge 客户端...")
+        login_json = self.webApiRequest('auth.login', [password])
+        try:
+            assert login_json['result'] is True
+        except Exception:
+            print('登录错误，请检查客户端地址和密码是否正确')
+            exit()
+
+    def webApiRequest(self, method, params):
+        if not self.sess:
+            self.sess = requests.Session()
+
+        self.id_ += 1
+
+        try:
+            req = self.sess.post("{}/json".format(self.host), json={
+                'method': method,
+                'params': params,
+                'id': self.id_
+            })
+            return req.json()
+        except Exception:
+            return {}
+
+    def getAllTorrentHashes(self) -> list:
+        res = self.webApiRequest('core.get_torrents_status', [{}, [
+            "trackers"
+        ]])
+        torrent_list = res.get('result', [])
+
+        return [{"hash": hash_} for (hash_, details) in torrent_list.items() if
+                any([tracker in torrent_list[hash_]['trackers'][0]['url'] for tracker in u2_tracker])]
+
+    def changeTorrentTracker(self, info, item):
+        self.webApiRequest('core.set_torrent_trackers', [info['hash'], [{
+            'tier': 0,
+            'url': to_tracker.format(item["result"])
+        }]])
+
+
+class RuTorrent(BtClient):
+    sess = None
+
+    def __init__(self):
+        super().__init__()
+        self.host = input("输入客户端地址（http://IP:端口）：")
+        self.user = input("输入客户端用户名：")
+        self.password = input("输入客户端密码：")
+
+        try:
+            ping = self.webRequest('php/getsettings.php')
+            ping.json()
+        except Exception:
+            print('检查ruTorrent连接性失败，请确认客户端地址、用户名、密码是否正确')
+            exit()
+
+    def webRequest(self, path, data=None):
+        return requests.post('{}/{}'.format(self.host, path),
+                             data=data,
+                             auth=(self.user, self.password))
+
+    def getAllTorrentHashes(self) -> list:
+        res = self.webRequest('/plugins/httprpc/action.php', {'mode': 'trkall'})
+        torrent_list = res.json()
+
+        return [{"hash": hash_} for (hash_, details) in torrent_list.items() if
+                any([tracker in torrent_list[hash_][0][0] for tracker in u2_tracker])]
+
+    def changeTorrentTracker(self, info, item):
+        self.webRequest('/plugins/edit/action.php', {
+            'comment': '',
+            'set_comment': 1,
+            'set_trackers': 1,
+            'set_private': 0,
+            'private': 1,
+            'tracker': to_tracker.format(item["result"]),
+            'hash': info['hash']
+        })
 
 
 if __name__ == '__main__':
@@ -263,13 +356,17 @@ if __name__ == '__main__':
 
     # 客户端类型
     client = None
-    clientType = input('当前客户端类型（1:qBittorrent,2:Transmission,3:Deluge）:')
+    clientType = input('请输入客户端类型：\n1:qBittorrent, 2:Transmission, 3:Deluge (RPC API), 4:Deluge (Web API), 5:ruTorrent ：')
     if clientType == '1':
         client = QBittorrent()
     elif clientType == '2':
         client = Transmission()
     elif clientType == '3':
-        client = Deluge()
+        client = DelugeRPC()
+    elif clientType == '4':
+        client = DelugeWebApi()
+    elif clientType == '5':
+        client = RuTorrent()
     else:
         exit()
 
